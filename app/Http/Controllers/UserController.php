@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
-use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
     private $repository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->repository = $userRepository;
     }
