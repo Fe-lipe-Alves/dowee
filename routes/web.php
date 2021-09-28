@@ -13,6 +13,9 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+
+$router->group(['prefix' => 'user'], function () use ($router) {
+
+    $router->post('store[/{userId}]', 'UserController@store');
+
 });
