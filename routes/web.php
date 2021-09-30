@@ -13,6 +13,9 @@
 |
 */
 
+$router->get('/', function () {
+   return view('index');
+});
 
 $router->group(['prefix' => 'user'], function () use ($router) {
 
@@ -20,3 +23,5 @@ $router->group(['prefix' => 'user'], function () use ($router) {
     $router->get('show/{userId}', 'UserController@show');
 
 });
+
+$router->get('all', 'ExampleController@get');
