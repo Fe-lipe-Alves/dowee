@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Deezer;
+
 class ExampleController extends Controller
 {
     /**
@@ -14,5 +16,10 @@ class ExampleController extends Controller
         //
     }
 
-    //
+    public function get()
+    {
+        $deezer = new Deezer();
+        $response = $deezer->chart();
+        return response()->json($response);
+    }
 }
