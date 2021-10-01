@@ -12,6 +12,7 @@ class Playlist extends Model
      * @var string[]
      */
     protected $fillable = [
+        'user_id',
         'name',
         'description',
     ];
@@ -42,5 +43,15 @@ class Playlist extends Model
     public function shares()
     {
         return $this->hasMany(SharedPlaylit::class);
+    }
+
+    /**
+     * Obtém o autor da playlist
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

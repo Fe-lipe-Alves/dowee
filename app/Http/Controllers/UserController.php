@@ -58,4 +58,16 @@ class UserController extends Controller
             'user' => $user
         ]);
     }
+
+    /**
+     * Obtém lista de playlists criadas e compartilhadas pelo usuário
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function playlists()
+    {
+        $playlists = $this->repository->allByUser();
+
+        return response()->json($playlists);
+    }
 }

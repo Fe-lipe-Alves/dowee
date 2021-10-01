@@ -17,11 +17,26 @@ $router->get('/', function () {
    return view('index');
 });
 
-$router->group(['prefix' => 'user'], function () use ($router) {
+$router->post('/auth/login', 'AuthController@postLogin');
+$router->post('/auth/logout', 'AuthController@postLogout');
 
-    $router->post('store[/{userId}]', 'UserController@store');
-    $router->get('show/{userId}', 'UserController@show');
+// Área bloqueada por login
+$router->group(['middleware' => 'auth:api'], function () use ($router) {
+
+    // Usuários
+    $router->group(['prefix' => 'users'], function () use ($router) {
+
+        $router->post('store[/{userId}]', 'UserController@store');
+        $router->get('show/{userId}', 'UserController@show');
+        $router->get('{userId}/playlists', 'UserController@playlists');
+
+    });
+
+    // Playlists
+    $router->group(['prefix' => 'playlists'], function () use ($router) {
+
+        $router->get('/', 'PlaylistController@index');
+
+    });
 
 });
-
-$router->get('all', 'ExampleController@get');
