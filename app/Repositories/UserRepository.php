@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -71,8 +72,42 @@ class UserRepository implements UserRepositoryInterface
         );
     }
 
+    /**
+     * Consulta por um ID de usuário específico
+     *
+     * @param int $userId
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     */
     public function get(int $userId)
     {
         return User::query()->find($userId);
+    }
+
+    /**
+     * Obtém as listas de playlists criadas e compartilhadas com o usuário
+     *
+     * @param User|null $user
+     * @return array
+     */
+    public function allByUser(User $user = null): array
+    {
+        $user = $user ?? Auth::user();
+        dd($user);
+
+        if (is_null($user)) {
+            return [
+                'success' => false,
+                'message' => 'Usuário não encontrado'
+            ];
+        }
+
+        $created = $user->playlists()->with('image')->get();
+        $shares = $user->shares()->with('image')->get();
+
+        return [
+            'success' => true,
+            'created' => $created,
+            'shares'  => $shares,
+        ];
     }
 }

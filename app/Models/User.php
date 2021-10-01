@@ -58,4 +58,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany(SharedPlaylit::class);
     }
+
+    /**
+     * Obtém lista de playlists criadas pelo usuário
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function playlists()
+    {
+        return $this->hasMany(Playlist::class);
+    }
 }

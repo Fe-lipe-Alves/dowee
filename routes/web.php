@@ -17,11 +17,16 @@ $router->get('/', function () {
    return view('index');
 });
 
-$router->group(['prefix' => 'user'], function () use ($router) {
+$router->group(['prefix' => 'users'], function () use ($router) {
 
     $router->post('store[/{userId}]', 'UserController@store');
     $router->get('show/{userId}', 'UserController@show');
+    $router->get('{userId}/playlists', 'UserController@playlists');
 
 });
 
-$router->get('all', 'ExampleController@get');
+$router->group(['prefix' => 'playlists'], function () use ($router) {
+
+    $router->get('/', 'PlaylistController@index');
+
+});

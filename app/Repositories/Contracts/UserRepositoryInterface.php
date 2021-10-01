@@ -23,4 +23,12 @@ interface UserRepositoryInterface
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public function validate(array $data, int $userId = null);
+
+    /**
+     * Obtém as listas de playlists criadas e compartilhadas com o usuário
+     *
+     * @param User|null $user
+     * @return array
+     */
+    public function allByUser(User $user = null): array;
 }
