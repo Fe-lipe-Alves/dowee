@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SharedPlaylit extends Model
+class SharedPlaylist extends Model
 {
     /**
      * Propriedades permitidas para atribuição em massa

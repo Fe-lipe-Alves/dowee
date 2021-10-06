@@ -67,7 +67,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function shares()
     {
-        return $this->hasMany(SharedPlaylit::class);
+        return $this->hasMany(SharedPlaylist::class);
     }
 
     /**

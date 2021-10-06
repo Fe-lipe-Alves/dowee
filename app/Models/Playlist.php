@@ -42,7 +42,7 @@ class Playlist extends Model
      */
     public function shares()
     {
-        return $this->hasMany(SharedPlaylit::class);
+        return $this->hasMany(SharedPlaylist::class);
     }
 
     /**

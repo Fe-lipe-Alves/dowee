@@ -19,6 +19,7 @@ $router->get('/', function () {
 
 $router->post('/auth/login', 'AuthController@postLogin');
 $router->post('/auth/logout', 'AuthController@postLogout');
+$router->post('users/create', 'UserController@store');
 
 // Área bloqueada por login
 $router->group(['middleware' => 'auth:api'], function () use ($router) {
@@ -26,8 +27,8 @@ $router->group(['middleware' => 'auth:api'], function () use ($router) {
     // Usuários
     $router->group(['prefix' => 'users'], function () use ($router) {
 
-        $router->post('store[/{userId}]', 'UserController@store');
-        $router->get('show/{userId}', 'UserController@show');
+        $router->put('{userId}/update', 'UserController@store');
+        $router->get('{userId}/show', 'UserController@show');
         $router->get('{userId}/playlists', 'UserController@playlists');
 
     });
@@ -36,6 +37,11 @@ $router->group(['middleware' => 'auth:api'], function () use ($router) {
     $router->group(['prefix' => 'playlists'], function () use ($router) {
 
         $router->get('/', 'PlaylistController@index');
+        $router->post('/create', 'PlaylistController@store');
+        $router->put('/{playlistId}/update', 'PlaylistController@store');
+        $router->post('/{playlistId}/show', 'PlaylistController@store');
+        $router->delete('/{playlistId}/delete', 'PlaylistController@destroy');
+        $router->post('/{playlistId}/add-user', 'PlaylistController@addUser');
 
     });
 

@@ -92,7 +92,6 @@ class UserRepository implements UserRepositoryInterface
     public function allByUser(User $user = null): array
     {
         $user = $user ?? Auth::user();
-        dd($user);
 
         if (is_null($user)) {
             return [
