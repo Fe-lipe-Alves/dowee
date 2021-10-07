@@ -41,6 +41,7 @@ $router->group(['middleware' => 'auth:api'], function () use ($router) {
         $router->put('/{playlistId}/update', 'PlaylistController@store');
         $router->post('/{playlistId}/show', 'PlaylistController@store');
         $router->delete('/{playlistId}/delete', 'PlaylistController@destroy');
+        $router->post('/{playlistId}/add-user', 'PlaylistController@addUser');
 
     });
 

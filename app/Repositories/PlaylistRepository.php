@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Playlist;
+use App\Models\SharedPlaylist;
 use App\Models\User;
 use App\Repositories\Contracts\PlaylistRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
@@ -113,9 +114,15 @@ class PlaylistRepository implements PlaylistRepositoryInterface
         return $playlists || $shares;
     }
 
-    public function delete(int $playlistId)
+    /**
+     * Deleta um registro de playlist
+     *
+     * @param int $playlistId
+     * @return array
+     */
+    public function delete(int $playlistId): array
     {
-        $playlist = Playlist::query()->find($playlistId);
+        $playlist = $this->find($playlistId);
 
         if (is_null($playlist)) {
             return [
@@ -134,6 +141,41 @@ class PlaylistRepository implements PlaylistRepositoryInterface
         return [
             'success' => false,
             'message' => 'Erro ao deletar playlist'
+        ];
+    }
+
+    /**
+     * Adiciona um usuário a playlist compartilhada
+     *
+     * @param int $playlistId
+     * @param int $userId
+     * @return array
+     */
+    public function addUser(int $playlistId, int $userId)
+    {
+        if (!Playlist::query()->where('id', $playlistId)->exists()) {
+            return [
+                'success' => false,
+                'message' => 'Playlist não encontrada',
+            ];
+        }
+
+        if (!User::query()->where('id', $userId)->exists()){
+            return [
+                'success' => false,
+                'message' => 'Usuário não encontrado',
+            ];
+        }
+
+        $share = new SharedPlaylist([
+            'playlist_id' => $playlistId,
+            'user_id' => $userId,
+        ]);
+        $share->save();
+
+        return [
+            'success' => true,
+            'message' => 'Usuário adicionado com sucesso',
         ];
     }
 }

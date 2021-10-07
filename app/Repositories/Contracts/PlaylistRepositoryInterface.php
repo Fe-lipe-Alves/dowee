@@ -38,4 +38,12 @@ interface PlaylistRepositoryInterface
      * @return bool
      */
     public function isAuth(int $playlistId): bool;
+
+    /**
+     * Deleta um registro de playlist
+     *
+     * @param int $playlistId
+     * @return array
+     */
+    public function delete(int $playlistId): array;
 }

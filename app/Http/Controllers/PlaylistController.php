@@ -38,4 +38,10 @@ class PlaylistController extends Controller
         $response = $this->repository->delete($playlistId);
         return response()->json($response);
     }
+
+    public function addUser(Request $request, int $playlistId)
+    {
+        $response = $this->repository->addUser($playlistId, $request->user_id);
+        return response()->json($response);
+    }
 }
