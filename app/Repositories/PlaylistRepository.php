@@ -6,6 +6,7 @@ use App\Models\Playlist;
 use App\Models\SharedPlaylist;
 use App\Models\User;
 use App\Repositories\Contracts\PlaylistRepositoryInterface;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -29,8 +30,12 @@ class PlaylistRepository implements PlaylistRepositoryInterface
             ];
         }
 
-        $created = $user->playlists()->with('image')->get();
-        $shares = $user->shares()->with('image')->get();
+        $created = $user->playlists()->get()->each(function ($item) {
+            $item->image;
+        });
+        $shares = $user->shares()->get()->each(function ($item) {
+            $item->image;
+        });;
 
         return [
             'success' => true,
@@ -63,7 +68,8 @@ class PlaylistRepository implements PlaylistRepositoryInterface
             ];
         }
 
-        $playlist = Playlist::query()->updateOrCreate(['id' => $playlistId], $data);
+        $playlist = Playlist::query()->updateOrCreate(['id' => $playlistId], Arr::except($data, ['user_id']));
+        $this->addUser($playlist->id, $data['user_id']);
 
         return [
             'success' => true,
@@ -108,7 +114,7 @@ class PlaylistRepository implements PlaylistRepositoryInterface
         /** @var User $user */
         $user = Auth::user();
 
-        $playlists = $user->playlists()->where('id', $playlistId)->exists();
+        $playlists = $user->playlists()->where('playlists.id', $playlistId)->exists();
         $shares = $user->shares()->where('playlist_id', $playlistId)->exists();
 
         return $playlists || $shares;
@@ -122,7 +128,7 @@ class PlaylistRepository implements PlaylistRepositoryInterface
      */
     public function delete(int $playlistId): array
     {
-        $playlist = $this->find($playlistId);
+        $playlist = Playlist::query()->find($playlistId);
 
         if (is_null($playlist)) {
             return [
@@ -130,6 +136,8 @@ class PlaylistRepository implements PlaylistRepositoryInterface
                 'message' => 'Playlist não encontrada'
             ];
         }
+
+        SharedPlaylist::query()->where('shared_playlists.playlist_id', $playlistId)->delete();
 
         if ($playlist->delete()) {
             return [

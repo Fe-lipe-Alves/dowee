@@ -32,7 +32,7 @@ class UserController extends Controller
 
         return response()->json([
             'success' => false,
-            'errors' => $store['errors'],
+            'message' => $store['message'],
         ]);
     }
 

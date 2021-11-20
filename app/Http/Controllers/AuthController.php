@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\JWTAuth;
 
 class AuthController extends Controller
@@ -35,23 +37,29 @@ class AuthController extends Controller
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'token expirado',
+                'message' => 'Token expirado',
             ], 500);
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'token inválido',
+                'message' => 'Token inválido',
             ], 500);
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'token ausente',
+                'message' => 'Token ausente',
             ], 500);
         }
 
+        /** @var User $user */
+        $user = Auth::user();
+        $user = $user->only(['id', 'name', 'email']);
+        $user['image'] = url('/images/user.png');
+
         return response()->json([
             'success' => true,
-            'token' => $token,
+            'token'   => $token,
+            'user'    => $user,
         ]);
     }
 

@@ -4,9 +4,11 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class UserRepository implements UserRepositoryInterface
@@ -24,7 +26,7 @@ class UserRepository implements UserRepositoryInterface
         if ($validator->fails()) {
             return [
                 'success' => false,
-                'errors' => $validator->errors(),
+                'message' => Arr::flatten($validator->errors()->toArray())[0],
             ];
         }
 
@@ -100,8 +102,12 @@ class UserRepository implements UserRepositoryInterface
             ];
         }
 
-        $created = $user->playlists()->with('image')->get();
-        $shares = $user->shares()->with('image')->get();
+        $created = $user->playlists()->get()->each(function ($item) {
+            $item->image;
+        });
+        $shares = $user->shares()->get()->each(function ($item) {
+            $item->image;
+        });;
 
         return [
             'success' => true,
